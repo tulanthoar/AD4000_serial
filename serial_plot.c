@@ -1,3 +1,4 @@
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "windows.h"
@@ -41,46 +42,27 @@ int main()
     }
     PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
 
-    FILE *f = fopen("C:/Users/natha/outf", "wb");
+    FILE *f = fopen("C:/Users/natha/plotf", "wb");
     if (f == NULL)
     {
         printf("unable to open outf\n");
         exit(1);
     }
     fflush(f);
+    unsigned short tbuf[1] = {65535};
     unsigned short rbuf[2048] = {0};
     unsigned short w = 0;
     unsigned long numBytesRead;
     unsigned long numBytesWritten;
     while (1)
     {
+        while(tbuf[0] > 100){
+            ReadFile(hSerial, tbuf, sizeof(tbuf), &numBytesRead, 0); //read 1
+        }
+        tbuf[0] = 65535;
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
+        fseek(f, 0, SEEK_SET);
         numBytesWritten = fwrite(rbuf, 1, sizeof(rbuf), f);
-
-        if (numBytesRead != sizeof(rbuf))
-        {
-            printf("number bytes read = %d", numBytesRead);
-            exit(1);
-        }
-        for (int i = 0; i < sizeof(rbuf) / 2; ++i)
-        {
-            //  printf("%hu ", rbuf[i]);
-            if (rbuf[i] != w)
-            {
-                printf("w = %hu, rbuf = %hu", w, rbuf[i]);
-                exit(1);
-            }
-            ++w;
-            if (w == 16384)
-                w = 0;
-        }
-        printf("%hu", w);
-
         fflush(f);
-        if (numBytesWritten != sizeof(rbuf))
-        {
-            printf("number bytes written = %d", numBytesWritten);
-            exit(1);
-        }
     }
 }

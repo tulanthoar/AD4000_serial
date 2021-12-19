@@ -5,6 +5,7 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 
 filename = "C:/Users/natha/plotf"
+plt.rcParams['figure.figsize'] = [13, 7]
 
 x_values = range(1,2049)
 y_values = []

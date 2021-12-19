@@ -46,7 +46,7 @@ int main()
     }
     PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
 
-    FILE *f = fopen("C:/Users/natha/plotf", "wb");
+    FILE *f = fopen("C:/Users/natha/fftf", "wb");
     if (f == NULL)
     {
         printf("unable to open outf\n");
@@ -72,7 +72,7 @@ int main()
     {
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
         for(int i = 0; i < N; ++i){
-            in[i] = rbuf[i] / 3500 * 3.3;
+            in[i] = rbuf[i] * 1.0e-6;
         }
         fftw_execute(p); /* repeat as needed */
         for(int i = 0; i < N/2 + 1; ++i){
@@ -81,6 +81,7 @@ int main()
         fseek(f, 0, SEEK_SET);
         numBytesWritten = fwrite(abs_out, 1, sizeof(abs_out), f);
         fflush(f);
+        Sleep(17);
     }
     fftw_destroy_plan(p);
     fftw_free(in); fftw_free(out);

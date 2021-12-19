@@ -45,7 +45,7 @@ int main()
     FILE *f = fopen("C:/Users/natha/plotf", "wb");
     if (f == NULL)
     {
-        printf("unable to open outf\n");
+        printf("unable to open plotf\n");
         exit(1);
     }
     fflush(f);
@@ -64,5 +64,6 @@ int main()
         fseek(f, 0, SEEK_SET);
         numBytesWritten = fwrite(rbuf, 1, sizeof(rbuf), f);
         fflush(f);
+        Sleep(17);
     }
 }

@@ -1,11 +1,12 @@
 import os
 import struct
+import matplotlib
+# matplotlib.use('GTK4Agg')
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 
-plt.style.use('fivethirtyeight')
-filename = "C:/Users/natha/plotf"
+filename = "C:/Users/natha/fftf"
 
 x_values = range(1,2050)
 y_values = []
@@ -19,9 +20,12 @@ cached_time = os.stat(filename).st_mtime
 with open(filename, mode='rb') as file: # b is important -> binary
     fileContent = file.read()
 double_values = struct.unpack('=2049d', fileContent)
-lines = ax.plot(double_values)
-
-fig.canvas.manager.show() 
+(lines,) = ax.plot(x_values, double_values, animated=True)
+plt.show(block=False)
+plt.pause(0.1)
+bg = fig.canvas.copy_from_bbox(fig.bbox)
+ax.draw_artist(lines)
+fig.canvas.blit(fig.bbox)
 try:
     while 1:
         stamp = os.stat(filename).st_mtime
@@ -31,8 +35,10 @@ try:
         with open(filename, mode='rb') as file: # b is important -> binary
             fileContent = file.read()
         double_values = struct.unpack('=2049d', fileContent)
-        lines[0].set_ydata(double_values)
-        fig.canvas.draw()
+        fig.canvas.restore_region(bg)
+        lines.set_ydata(double_values)
+        ax.draw_artist(lines)
+        fig.canvas.blit(fig.bbox)
         fig.canvas.flush_events()
 except KeyboardInterrupt:
     exit(1)

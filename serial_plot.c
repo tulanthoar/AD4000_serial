@@ -65,5 +65,6 @@ int main()
         numBytesWritten = fwrite(rbuf, 1, sizeof(rbuf), f);
         fflush(f);
         Sleep(17);
+        PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
     }
 }

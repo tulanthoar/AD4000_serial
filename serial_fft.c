@@ -82,6 +82,7 @@ int main()
         numBytesWritten = fwrite(abs_out, 1, sizeof(abs_out), f);
         fflush(f);
         Sleep(17);
+        PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
     }
     fftw_destroy_plan(p);
     fftw_free(in); fftw_free(out);

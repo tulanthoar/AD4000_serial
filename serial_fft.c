@@ -8,11 +8,11 @@
 #include <math.h>
 #include <complex.h>
 
-int main()
+int main(int argc, char *argv[])
 {
     HANDLE hSerial;
     hSerial = CreateFile(
-        "COM5",
+        argv[1],
         GENERIC_READ,
         0,
         0,

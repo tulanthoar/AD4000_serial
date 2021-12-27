@@ -9,7 +9,7 @@ int main()
 {
     HANDLE hSerial;
     hSerial = CreateFile(
-        "COM4",
+        "COM5",
         GENERIC_READ,
         0,
         0,
@@ -31,10 +31,10 @@ int main()
     {
         printf("error getting state\n");
     }
-    dcbSerialParams.BaudRate = 12000000;
+    dcbSerialParams.BaudRate = 11978688;
     dcbSerialParams.ByteSize = 8;
     dcbSerialParams.StopBits = ONESTOPBIT;
-    dcbSerialParams.Parity = EVENPARITY;
+    dcbSerialParams.Parity = NOPARITY;
     dcbSerialParams.fParity = TRUE;
     if (!SetCommState(hSerial, &dcbSerialParams))
     {
@@ -50,21 +50,23 @@ int main()
     }
     fflush(f);
     unsigned short tbuf[1] = {65535};
+    unsigned short sbuf[2] = {0, 0};
+    short slope = 0;
     unsigned short rbuf[2048] = {0};
     unsigned short w = 0;
     unsigned long numBytesRead;
     unsigned long numBytesWritten;
     while (1)
     {
-        while(tbuf[0] > 100){
-            ReadFile(hSerial, tbuf, sizeof(tbuf), &numBytesRead, 0); //read 1
+        while((sbuf[0] > 2059) || (sbuf[0] < 2039) || (slope > 0)){
+            ReadFile(hSerial, sbuf, sizeof(sbuf), &numBytesRead, 0); //read 1
+            slope = sbuf[0] - sbuf[1];
         }
-        tbuf[0] = 65535;
+        sbuf[0] = 65535;
+        slope = 1e4;
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
         fseek(f, 0, SEEK_SET);
         numBytesWritten = fwrite(rbuf, 1, sizeof(rbuf), f);
         fflush(f);
-        Sleep(17);
-        PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
     }
 }

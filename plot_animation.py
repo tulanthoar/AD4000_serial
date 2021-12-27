@@ -7,6 +7,7 @@ import numpy as np
 filename = "C:/Users/natha/plotf"
 plt.rcParams['figure.figsize'] = [13, 7]
 
+scale = 3.3 / 4096
 x_values = range(1,2049)
 y_values = []
 fig, ax = plt.subplots()
@@ -19,7 +20,7 @@ cached_time = os.stat(filename).st_mtime
 with open(filename, mode='rb') as file: # b is important -> binary
     fileContent = file.read()
 y_values = struct.unpack('=2048H', fileContent)
-double_values = np.array(y_values) * 3.3 / 3500
+double_values = np.array(y_values) * scale
 (lines,) = ax.plot(x_values, double_values, animated=True)
 plt.show(block=False)
 plt.pause(0.1)
@@ -36,7 +37,7 @@ try:
         with open(filename, mode='rb') as file: # b is important -> binary
             fileContent = file.read()
         y_values = struct.unpack('=2048H', fileContent)
-        double_values = np.array(y_values) * 3.3 / 3500
+        double_values = np.array(y_values) * scale
         fig.canvas.restore_region(bg)
         lines.set_ydata(double_values)
         ax.draw_artist(lines)

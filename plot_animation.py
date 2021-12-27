@@ -1,7 +1,6 @@
 import os
 import struct
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import numpy as np
 
 filename = "C:/Users/natha/plotf"

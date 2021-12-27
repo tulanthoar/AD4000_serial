@@ -10,10 +10,9 @@
 
 int main()
 {
-    srand(0);
     HANDLE hSerial;
     hSerial = CreateFile(
-        "COM4",
+        "COM5",
         GENERIC_READ,
         0,
         0,
@@ -35,10 +34,10 @@ int main()
     {
         printf("error getting state\n");
     }
-    dcbSerialParams.BaudRate = 12000000;
+    dcbSerialParams.BaudRate = 11978688;
     dcbSerialParams.ByteSize = 8;
     dcbSerialParams.StopBits = ONESTOPBIT;
-    dcbSerialParams.Parity = EVENPARITY;
+    dcbSerialParams.Parity = NOPARITY;
     dcbSerialParams.fParity = TRUE;
     if (!SetCommState(hSerial, &dcbSerialParams))
     {
@@ -65,24 +64,17 @@ int main()
     unsigned short w = 0;
     unsigned long numBytesRead;
     unsigned long numBytesWritten;
-    // for(int i = 0; i < N; ++i){
-    //     in[i] = 5*sin(10*i / N * 2 * 3.14159) + rand() / RAND_MAX;
-    // }
     while (1)
     {
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
-        for(int i = 0; i < N; ++i){
-            in[i] = rbuf[i] * 1.0e-6;
-        }
         fftw_execute(p); /* repeat as needed */
+        for(int i = 0; i < N; ++i) in[i] = rbuf[i] * 1.0;
         for(int i = 0; i < N/2 + 1; ++i){
-            abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]));
+            abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 133.0;
         }
         fseek(f, 0, SEEK_SET);
         numBytesWritten = fwrite(abs_out, 1, sizeof(abs_out), f);
         fflush(f);
-        Sleep(17);
-        PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
     }
     fftw_destroy_plan(p);
     fftw_free(in); fftw_free(out);

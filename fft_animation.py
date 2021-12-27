@@ -7,10 +7,10 @@ import numpy as np
 filename = "C:/Users/natha/fftf"
 plt.rcParams['figure.figsize'] = [13, 7]
 
-x_values = range(1,2050)
+x_values = np.array(range(0,2049)) * 0.14258
 y_values = []
 fig, ax = plt.subplots()
-ax.axis([1, 2050, -100, 100])
+ax.axis([0.143, 293, -100, 0])
 cached_time = os.stat(filename).st_mtime
 stamp = os.stat(filename).st_mtime
 while(stamp == cached_time):

@@ -35,7 +35,7 @@ int main()
     dcbSerialParams.ByteSize = 8;
     dcbSerialParams.StopBits = ONESTOPBIT;
     dcbSerialParams.Parity = NOPARITY;
-    dcbSerialParams.fParity = TRUE;
+    dcbSerialParams.fParity = FALSE;
     if (!SetCommState(hSerial, &dcbSerialParams))
     {
         printf("error setting serial port state\n");

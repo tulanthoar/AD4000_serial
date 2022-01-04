@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
         for(int i = 0; i < N; ++i) in[i] = rbuf[i] * 1.0;
         // execute the fourier transform
         fftw_execute(p);
-        // convert the complex fourier coefficients to magnitudes, subtracting 133 for 0 dB to correspond to full scale
+        // convert the complex fourier coefficients to magnitudes, subtracting 145 for 0 dB to correspond to full scale
         for(int i = 0; i < N/2 + 1; ++i){
             abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 145.0;
         }

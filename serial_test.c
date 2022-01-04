@@ -4,7 +4,7 @@
 #include <io.h>
 #include <fcntl.h>
 
-int main()
+int main(int argc, char *argv[])
 {
     // handle for the serial interface
     HANDLE hSerial;
@@ -72,7 +72,7 @@ int main()
     {
         // read bytes from the serial device to fill the receive buffer
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
-        write the read bytes into the output file
+        // write the read bytes into the output file
         numBytesWritten = fwrite(rbuf, 1, sizeof(rbuf), f);
 
         // check that the number of bytes we read is the number we expect

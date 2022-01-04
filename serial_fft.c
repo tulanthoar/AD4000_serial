@@ -71,17 +71,17 @@ int main(int argc, char *argv[])
     // fft plan to calculate the transform
     fftw_plan p;
     // number of points
-    unsigned int N = 4096;
+    unsigned int N = 16384;
     // initialize the input to the fourier transform algorithm
     in = (double*) fftw_malloc(sizeof(double) * N);
     // initialize the output of the fourier transform
     out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
     // the magnitude of the fourier coefficients to be plotted
-    double abs_out[2049];
+    double abs_out[8193];
     // create the fftw plan, discrete forward transform real to complex 1D
     p = fftw_plan_dft_r2c_1d(N, in, out, FFTW_MEASURE);
     // buffer for the recieved data
-    unsigned short rbuf[4096] = {0};
+    unsigned short rbuf[16384] = {0};
     // number of bytes read from serial device
     unsigned long numBytesRead;
     // number of bytes written to the output file 
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         fftw_execute(p);
         // convert the complex fourier coefficients to magnitudes, subtracting 133 for 0 dB to correspond to full scale
         for(int i = 0; i < N/2 + 1; ++i){
-            abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 133.0;
+            abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 145.0;
         }
         // seek to the start of the file to overwrite our prior data
         fseek(f, 0, SEEK_SET);

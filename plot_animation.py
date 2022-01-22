@@ -1,3 +1,4 @@
+import time
 import os
 import struct
 import matplotlib.pyplot as plt
@@ -45,6 +46,7 @@ bg = fig.canvas.copy_from_bbox(fig.bbox)
 ax.draw_artist(lines)
 # update the canvas
 fig.canvas.blit(fig.bbox)
+start = time.time()
 
 try:
     while 1:
@@ -73,5 +75,9 @@ try:
         fig.canvas.blit(fig.bbox)
         # flush all the events to update the image on screen
         fig.canvas.flush_events()
+        end = time.time()
+        elapsed = (end - start) * 1000
+        print(f"elapsed time {elapsed} ms")
+        start = end
 except KeyboardInterrupt:
     exit(1)

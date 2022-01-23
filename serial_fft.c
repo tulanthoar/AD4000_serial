@@ -65,21 +65,21 @@ int main(int argc, char *argv[])
     // flush any data to the file
     fflush(f);
     // complex fourier coefficients
-    fftw_complex *out;
+    fftwf_complex *out;
     // the inputs are real values
-    double *in;
+    float *in;
     // fft plan to calculate the transform
-    fftw_plan p;
+    fftwf_plan p;
     // number of points
     unsigned int N = 16384;
     // initialize the input to the fourier transform algorithm
-    in = (double*) fftw_malloc(sizeof(double) * N);
+    in = (float*) fftw_malloc(sizeof(float) * N);
     // initialize the output of the fourier transform
-    out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    out = (fftwf_complex*) fftwf_malloc(sizeof(fftwf_complex) * N);
     // the magnitude of the fourier coefficients to be plotted
-    double abs_out[8193];
+    float abs_out[8193];
     // create the fftw plan, discrete forward transform real to complex 1D
-    p = fftw_plan_dft_r2c_1d(N, in, out, FFTW_MEASURE);
+    p = fftwf_plan_dft_r2c_1d(N, in, out, FFTW_MEASURE);
     // buffer for the recieved data
     unsigned short rbuf[16384] = {0};
     // number of bytes read from serial device
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
         // convert the read values from 16 bit integers to doubles
         for(int i = 0; i < N; ++i) in[i] = rbuf[i] * 1.0;
         // execute the fourier transform
-        fftw_execute(p);
+        fftwf_execute(p);
         // convert the complex fourier coefficients to magnitudes, subtracting 145 for 0 dB to correspond to full scale
         for(int i = 0; i < N/2 + 1; ++i){
             abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 145.0;
@@ -106,6 +106,6 @@ int main(int argc, char *argv[])
         fflush(f);
     }
     // dealocate the memory we reserved
-    fftw_destroy_plan(p);
-    fftw_free(in); fftw_free(out);
+    fftwf_destroy_plan(p);
+    fftwf_free(in); fftwf_free(out);
 }

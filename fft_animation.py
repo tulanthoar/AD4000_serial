@@ -2,11 +2,11 @@ import time
 import os
 import struct
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import numpy as np
+import tkinter
 
 filename = "C:/Users/natha/fftf"
-plt.rcParams['figure.figsize'] = [13, 7]
+plt.rcParams['figure.figsize'] = [11, 6]
 
 # x values range from 0 to approximately 300 kHz
 x_values = np.array(range(0,8193)) * 0.14258 / 4
@@ -42,36 +42,47 @@ bg = fig.canvas.copy_from_bbox(fig.bbox)
 ax.draw_artist(lines)
 # update the canvas
 fig.canvas.blit(fig.bbox)
+# flush all the events to update the image on screen
+fig.canvas.flush_events()
+# start the timer
 start = time.time()
+# start counting frames at 0
 frames = 0
 
-try:
-    while 1:
-        # collect the current time stamp
-        stamp = os.stat(filename).st_mtime
-        # wait while the current time stamp is equal to the cached time
-        while(stamp == cached_time):
+# open the binary file, b is important -> binary
+with open(filename, mode='rb') as file:
+    try:
+        while 1:
+            # collect the current time stamp
             stamp = os.stat(filename).st_mtime
-        # cache the current time stamp of the data
-        cached_time = os.stat(filename).st_mtime
-        # open the binary file
-        with open(filename, mode='rb') as file: # b is important -> binary
+            # wait while the current time stamp is equal to the cached time
+            while(stamp == cached_time):
+                stamp = os.stat(filename).st_mtime
+            # cache the current time stamp of the data
+            cached_time = os.stat(filename).st_mtime
+            # start at the beginning of the file
+            file.seek(0)
             # read the binary data
             fileContent = file.read()
-        # unpack the y values as doubles
-        float_values = struct.unpack('=8193f', fileContent)
-        # restore the canvas to the cached background image
-        fig.canvas.restore_region(bg)
-        # set the data to the lines
-        lines.set_ydata(float_values)
-        # draw the lines
-        ax.draw_artist(lines)
-        # update the canvas
-        fig.canvas.blit(fig.bbox)
-        # flush all the events to update the image on screen
-        fig.canvas.flush_events()
+            # unpack the y values as doubles
+            float_values = struct.unpack('=8193f', fileContent)
+            # restore the canvas to the cached background image
+            fig.canvas.restore_region(bg)
+            # set the data to the lines
+            lines.set_ydata(float_values)
+            # draw the lines
+            ax.draw_artist(lines)
+            # update the canvas
+            fig.canvas.blit(fig.bbox)
+            # flush all the events to update the image on screen
+            fig.canvas.flush_events()
+            # increment the frame counter to keep track of average frame time
+            frames += 1
+    except KeyboardInterrupt:
         elapsed = (time.time() - start) * 1000
-        frames += 1
         print(f"average frame time {elapsed / frames} ms")
-except KeyboardInterrupt:
-    exit(1)
+        exit(1)
+    except tkinter.TclError:
+        elapsed = (time.time() - start) * 1000
+        print(f"average frame time {elapsed / frames} ms")
+        exit(1)

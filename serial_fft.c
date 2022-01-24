@@ -56,14 +56,25 @@ int main(int argc, char *argv[])
     PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
 
     // open the output file
-    FILE *f = fopen("C:/Users/natha/fftf", "wb");
-    if (f == NULL)
+    FILE *fFft = fopen("C:/Users/natha/fftf", "wb");
+    if (fFft == NULL)
     {
         printf("unable to open outf\n");
         exit(1);
     }
     // flush any data to the file
-    fflush(f);
+    fflush(fFft);
+
+    // open the output file
+    FILE *fOut = fopen("C:/Users/natha/outf", "wb");
+    if (fOut == NULL)
+    {
+        printf("unable to open outf\n");
+        exit(1);
+    }
+    // flush any data to the file
+    fflush(fOut);
+
     // complex fourier coefficients
     fftwf_complex *out;
     // the inputs are real values
@@ -85,11 +96,15 @@ int main(int argc, char *argv[])
     // number of bytes read from serial device
     unsigned long numBytesRead;
     // number of bytes written to the output file 
-    unsigned long numBytesWritten;
+    unsigned long numBytesWrittenOut;
+    // number of bytes written to the fft file 
+    unsigned long numBytesWrittenFft;
     while (1)
     {
         // read data from serial device
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
+        // write the read bytes into the output file
+        numBytesWrittenOut = fwrite(rbuf, 1, sizeof(rbuf), fOut);
         // convert the read values from 16 bit integers to doubles
         for(int i = 0; i < N; ++i) in[i] = rbuf[i] * 1.0;
         // execute the fourier transform
@@ -99,11 +114,13 @@ int main(int argc, char *argv[])
             abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 145.0;
         }
         // seek to the start of the file to overwrite our prior data
-        fseek(f, 0, SEEK_SET);
+        fseek(fFft, 0, SEEK_SET);
         // write the values to the file
-        numBytesWritten = fwrite(abs_out, 1, sizeof(abs_out), f);
-        // flush the data to the output file
-        fflush(f);
+        numBytesWrittenFft = fwrite(abs_out, 1, sizeof(abs_out), fFft);
+        // flush the data to the fft file
+        fflush(fOut);
+        // flush the data to the fft file
+        fflush(fFft);
     }
     // dealocate the memory we reserved
     fftwf_destroy_plan(p);

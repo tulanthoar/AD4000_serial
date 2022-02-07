@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     // initialize the slope
     short slope = 0;
     // buffer to read the data into
-    unsigned short rbuf[2048] = {0};
+    unsigned short rbuf[4096] = {0};
     // number of bytes read from the serial device
     unsigned long numBytesRead;
     // number of bytes written to the output file
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     {
         // check whether the slope is negative, or the value is far below mid voltage,
         // or the value is far above mid voltage
-        while((sbuf[0] > 2059) || (sbuf[0] < 2039) || (slope < 0)){
+        while((sbuf[0] > 32818) || (sbuf[0] < 32718) || (slope < 0)){
             // if any of the above conditions are true, read the next two values to check the condition again 
             ReadFile(hSerial, sbuf, sizeof(sbuf), &numBytesRead, 0);
             // calculate the new slope

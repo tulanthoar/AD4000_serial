@@ -8,6 +8,8 @@
 #include <math.h>
 #include <complex.h>
 
+// argument 1 is name of COM port
+// argument 2 is name of file to use in fft_animation.py
 int main(int argc, char *argv[])
 {
     // handle for the serial interface
@@ -56,7 +58,7 @@ int main(int argc, char *argv[])
     PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
 
     // open the output file
-    FILE *fFft = fopen("C:/Users/natha/fftf", "wb");
+    FILE *fFft = fopen(argv[2], "wb");
     if (fFft == NULL)
     {
         printf("unable to open outf\n");
@@ -111,7 +113,7 @@ int main(int argc, char *argv[])
         fftwf_execute(p);
         // convert the complex fourier coefficients to magnitudes, subtracting 145 for 0 dB to correspond to full scale
         for(int i = 0; i < N/2 + 1; ++i){
-            abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 145.0;
+            abs_out[i] = 20 * log10(sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1])) - 167.8;
         }
         // seek to the start of the file to overwrite our prior data
         fseek(fFft, 0, SEEK_SET);

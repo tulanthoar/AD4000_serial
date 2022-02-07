@@ -1,11 +1,13 @@
 import time
 import os
+import sys
 import struct
 import matplotlib.pyplot as plt
 import numpy as np
 import tkinter
 
-filename = "C:/Users/natha/fftf"
+# name of file given to serial_fft.exe
+filename = sys.argv[1]
 plt.rcParams['figure.figsize'] = [11, 6]
 
 # x values range from 0 to approximately 300 kHz
@@ -14,7 +16,7 @@ y_values = []
 # create the figure and axis objects
 fig, ax = plt.subplots()
 # set the axis limits
-ax.axis([0.143, 293, -120, 0])
+ax.axis([0.143, 293, -140, 5])
 # cache the time of the most recent edit of the plotting data
 cached_time = os.stat(filename).st_mtime
 # collect the current time of the plotting data
@@ -32,6 +34,8 @@ with open(filename, mode='rb') as file: # b is important -> binary
 float_values = struct.unpack('=8193f', fileContent)
 # plot the initial data
 (lines,) = ax.plot(x_values, float_values, animated=True, linewidth=0.5, marker='x', markeredgecolor='red', markersize=4)
+plt.xlabel("Frequency [kHz]")
+plt.ylabel("Magnitude [dB]")
 # show the plot
 plt.show(block=False)
 # pause the plot to allow time to draw
@@ -79,10 +83,16 @@ with open(filename, mode='rb') as file:
             # increment the frame counter to keep track of average frame time
             frames += 1
     except KeyboardInterrupt:
-        elapsed = (time.time() - start) * 1000
-        print(f"average frame time {elapsed / frames} ms")
+        elapsed = (time.time() - start)
+        frameTime = elapsed / frames
+        throughput = 16384 / frameTime
+        print(f"average frame time {frameTime} ms")
+        print(f"average throughput {throughput} sps")
         exit(1)
     except tkinter.TclError:
-        elapsed = (time.time() - start) * 1000
-        print(f"average frame time {elapsed / frames} ms")
+        elapsed = (time.time() - start)
+        frameTime = elapsed / frames
+        throughput = 16384 / frameTime
+        print(f"average frame time {frameTime} ms")
+        print(f"average throughput {throughput} sps")
         exit(1)

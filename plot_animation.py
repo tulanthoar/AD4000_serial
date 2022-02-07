@@ -7,7 +7,7 @@ import tkinter
 
 filename = "C:/Users/natha/plotf"
 # default figure size
-plt.rcParams['figure.figsize'] = [11, 6]
+plt.rcParams['figure.figsize'] = [10, 5.5]
 
 # scaling factor for a 12 bit converter with 3.3V range
 scale = 3.3 / 65536

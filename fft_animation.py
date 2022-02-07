@@ -8,7 +8,7 @@ import tkinter
 
 # name of file given to serial_fft.exe
 filename = sys.argv[1]
-plt.rcParams['figure.figsize'] = [11, 6]
+plt.rcParams['figure.figsize'] = [10, 5.5]
 
 # x values range from 0 to approximately 300 kHz
 x_values = np.array(range(0,8193)) * 0.14258 / 4
@@ -86,13 +86,13 @@ with open(filename, mode='rb') as file:
         elapsed = (time.time() - start)
         frameTime = elapsed / frames
         throughput = 16384 / frameTime
-        print(f"average frame time {frameTime} ms")
+        print(f"average frame time {frameTime * 1000} ms")
         print(f"average throughput {throughput} sps")
         exit(1)
     except tkinter.TclError:
         elapsed = (time.time() - start)
         frameTime = elapsed / frames
         throughput = 16384 / frameTime
-        print(f"average frame time {frameTime} ms")
+        print(f"average frame time {frameTime * 1000} ms")
         print(f"average throughput {throughput} sps")
         exit(1)

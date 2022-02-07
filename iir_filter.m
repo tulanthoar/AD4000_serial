@@ -5,6 +5,7 @@ pll2p = 8;
 F_spi = HSE / pll2m * pll2n / pll2p / 2;
 Ts = 16 / F_spi;
 fc = 75e3;
+% fc = 1.1e6;
 n = 3;
 [zb,pb,kb] = butter(n,2*pi*fc,'s');
 [bb,ab] = zp2tf(zb,pb,kb);

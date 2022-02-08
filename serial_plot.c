@@ -6,6 +6,11 @@
 
 int main(int argc, char *argv[])
 {
+    if( argc < 2){
+        printf("Application requires 1 argument\n");
+        printf("Arg 1 is the name of COM port to use\n");
+        exit(1);
+    }
     // handle for the serial interface
     HANDLE hSerial;
     hSerial = CreateFile(

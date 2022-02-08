@@ -10,8 +10,16 @@
 
 // argument 1 is name of COM port
 // argument 2 is name of file to use in fft_animation.py
+// argument 3 is the name of file to record data to
 int main(int argc, char *argv[])
 {
+    if( argc < 4){
+        printf("Application requires 3 arguments\n");
+        printf("Arg 1 is the name of COM port to use\n");
+        printf("Arg 2 is the name of file to plot\n");
+        printf("Arg 3 is the name of file to record to\n");
+        exit(1);
+    }
     // handle for the serial interface
     HANDLE hSerial;
     hSerial = CreateFile(
@@ -68,7 +76,7 @@ int main(int argc, char *argv[])
     fflush(fFft);
 
     // open the output file
-    FILE *fOut = fopen("C:/Users/natha/outf", "wb");
+    FILE *fOut = fopen(argv[3], "wb");
     if (fOut == NULL)
     {
         printf("unable to open outf\n");

@@ -8,17 +8,28 @@ fc = 75e3;
 % fc = 1.1e6;
 n = 3;
 [zb,pb,kb] = butter(n,2*pi*fc,'s');
-[bb,ab] = zp2tf(zb,pb,kb);
 Fs = 1 / Ts;
 Ws = Fs * 2 * pi;
 nyquist = (Ws / 2);
-wb = logspace(2, log10(nyquist), 4000);
+[bb,ab] = zp2tf(zb,pb,kb);
+
+% wb = logspace(2, log10(nyquist), 4000);
+wb = linspace(1, nyquist, 4000);
 hb = freqs(bb,ab,wb);
+hbHigh = zeros(size(hb));
+wbHigh = zeros(size(wb));
+for i = 1:length(hb)
+    hbHigh(i) = hb(i);
+    wbHigh(i) = 2 * nyquist - wb(i);
+end
 
 figure
-semilogx(wb/(2*pi),mag2db(abs(hb)))
+h = plot(wb/(2*pi),mag2db(abs(hb)));
+set(h, 'LineWidth', 3)
 hold on
-axis([10 1.1e6 -80 5])
+h = plot(wbHigh/(2*pi),mag2db(abs(hbHigh)));
+set(h, 'LineWidth', 3)
+axis([10 (nyquist/pi + 80000) -80 5])
 grid
 xlabel('Frequency (Hz)')
 ylabel('Attenuation (dB)')

@@ -11,12 +11,12 @@ filename = sys.argv[1]
 plt.rcParams['figure.figsize'] = [10, 5.5]
 
 # x values range from 0 to approximately 300 kHz
-x_values = np.array(range(0,8193)) * 0.14258 / 4
+x_values = np.array(range(0,8193)) * 0.14258 / 4 * float(sys.argv[2]) / 300
 y_values = []
 # create the figure and axis objects
 fig, ax = plt.subplots()
 # set the axis limits
-ax.axis([0.143, 293, -140, 5])
+ax.axis([x_values[0], x_values[-1], -140, 5])
 # cache the time of the most recent edit of the plotting data
 cached_time = os.stat(filename).st_mtime
 # collect the current time of the plotting data

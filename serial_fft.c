@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
         // read data from serial device
         ReadFile(hSerial, rbuf, sizeof(rbuf), &numBytesRead, 0); //read 1
         // write the read bytes into the output file
-        numBytesWrittenOut = fwrite(rbuf, 1, sizeof(rbuf), fOut);
+        // numBytesWrittenOut = fwrite(rbuf, 1, sizeof(rbuf), fOut);
         // convert the read values from 16 bit integers to doubles
         for(int i = 0; i < N; ++i) in[i] = rbuf[i] * 1.0;
         // execute the fourier transform
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
         // write the values to the file
         numBytesWrittenFft = fwrite(abs_out, 1, sizeof(abs_out), fFft);
         // flush the data to the fft file
-        fflush(fOut);
+        // fflush(fOut);
         // flush the data to the fft file
         fflush(fFft);
     }
